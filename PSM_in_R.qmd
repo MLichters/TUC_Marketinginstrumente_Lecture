@@ -1,0 +1,127 @@
+---
+title: "Price Sensitivity Meter in R"
+author: 
+  - name: Marcel Lichters & Joshua Schramm
+    affiliations:
+      - TU Chemnitz - Chair of Marketing and Retail
+date: "`r Sys.Date()`"
+format:
+  html:
+    toc: true
+    toc-location: left
+    code-fold: true
+    code-summary: "Show the code"
+    code-tools: true
+    number-sections: true
+    number-depth: 3
+    citations-hover: true
+    footnotes-hover: true
+editor: visual
+theme: journal
+website:
+  sidebar: false
+---
+
+
+<style>
+.button-link {
+  padding: 10px 20px;
+  background-color: #E60012;
+  border-color: #E60012;
+  color: #ffffff;
+}
+</style>
+
+Dies soll Ihnen die Möglichkeit bieten, sich etwas genauer mit *R* und *RStudio* zu beschäftigen. Um die Programme zu downloaden, gehen Sie entsprechend auf die offizielle Cran bzw. RStudio Seite. Außerdem gibt es ausreichend Tutorials im Internet hierzu.
+
+::: callout-note
+*R* ist eine kontext-sensitive Sprache, das bedeutet, dass *data* anders interpretiert wird als *Data*.
+:::
+
+## Vorbereitung
+
+Um in *R* Packages zu nutzen, müssen diese zunächst installiert und anschließend geladen werden. Packages werden mit dem folgenden Befehl installiert 'install.packages(*name of the package*)'. Um es zu nutzen, müssen Sie es noch mit dem Befehl 'library(*name of the package*)' laden.
+
+::: callout-tip
+Um besser verstehen zu können, welche Argumente bzw. Daten eine Funktion braucht, können Sie Ihren Cursor in den Namen der Funktion platzieren und dann *'F1'* drücken.
+:::
+
+Lassen Sie uns die Daten laden. Hierfür nutzen wir den Befehl *read.csv()*. 
+
+::: callout-important
+## Daten Download
+
+Um die Daten zu laden, klicken Sie bitte auf den Button "Click to download".
+
+<a href="RawExport.csv" class="button-link"  download>Click to Download</a>
+:::
+
+```{r}
+d <- read.csv("RawExport.csv")
+names(d)
+```
+
+Wie Sie nun rechts in der *Environment* sehen können, hat der Datensatz insgesamt 5 Variablen: <br>
+<ul>
+<li>
+Die Respondent ID, also eine Identifier Variable.
+</li>
+<li>
+**PSMtoocheap**: Die Variable enthält die Preise, die als **zu günstig** wahrgenommen wurden.
+</li>
+<li>
+**PSMcheap**: Die Variable enthält die Preise, die als **günstig** wahrgenommen wurden.
+</li>
+<li>
+**PSMexpensive**: Die Variable enthält die Preise, die als **teuer** wahrgenommen wurden.
+</li>
+<li>
+**PSMtooexpensive**: Die Variable enthält die Preise, die als **zu teuer** wahrgenommen wurden.
+</li>
+</ul>
+
+## Analyse
+
+Um die Analyse durchzuführen, laden wir das Package [*pricesensitivitymeter*](https://cran.r-project.org/web/packages/pricesensitivitymeter/index.html){target="_blank"}. 
+
+```{r, warning=FALSE, message=FALSE, results='hide'}
+install.packages("pricesensitivitymeter", repos = "https://cran.r-project.org/")
+library(pricesensitivitymeter)
+```
+
+Wir nutzen hier die Funktion *psm_analysis()*. Diese Funktion braucht in unserem Fall lediglich die 4 Variablen (zu günstig, günstig, teuer, zu teuer). Wir speichern die Ergebnisse in *psm_in_R*.
+
+```{r}
+psm_in_R <- psm_analysis(toocheap = d$PSMtoocheap, cheap = d$PSMcheap, expensive = d$PSMexpensive, tooexpensive = d$PSMtooexpensive)
+```
+
+Anschließend geben wir die Resultate mittels der *summary()* Funktion aus.
+
+```{r}
+summary(psm_in_R)
+```
+
+
+## Darstellung
+
+Anschließend wollen wir das ganze nun noch grafisch darstellen. Hierfür nutzen wir das Package [*ggplot2*](https://ggplot2.tidyverse.org/){target="_blank"}.
+
+```{r, warning=FALSE, message=FALSE, results='hide'}
+install.packages("ggplot2", repos = "https://cran.r-project.org/")
+library("ggplot2")
+```
+
+Wir nutzen die Funktion *psm_plot()*, um die Daten entsprechend für ein Plot auzubereiten. Anschließend rufen wir den Befehl wieder ab und nutzen *theme_minimal()* von *ggplot2*. Wie gesagt handelt es sich erstmal um die einfachste Darstellung.
+
+```{r}
+default_psm_plot <- psm_plot(psm_in_R)
+
+default_psm_plot + theme_minimal()
+```
+
+Nun können wir zumindest noch die Axen sowie den Titel anpassen.
+
+```{r}
+default_psm_plot + theme_minimal() + ylab("Prozente") + xlab("Preis") + ggtitle("PSM in R") + theme(plot.title = element_text(hjust = 0.5))
+```
+
