@@ -11,7 +11,7 @@ author:
     url: https://www.tu-chemnitz.de/wirtschaft/bwl2/index.html
     affiliation: Chemnitz University of Technology
     affiliation-url: https://www.tu-chemnitz.de/index.html.en
-date: today
+date: now
 date-format: full
 citation:
   language: "en"
@@ -32,28 +32,25 @@ format:
     footnotes-hover: true
 email-obfuscation: javascript
 editor: source
-bibliography: Citavi_Export2.bib
 ---
 
+Diese Übung soll Ihnen die Möglichkeit bieten, sich etwas genauer mit [*R*](https://cran.r-project.org/) und [*RStudio*](https://posit.co/products/open-source/rstudio/) zu beschäftigen. Dies sind Skills im Bereich Datenanalyse, die Ihnen im Verlauf des weiteren Studiums sehr helfen werden. Es existieren mittlerweile sehr viele Tutorials im Internet hierzu. Daneben existieren gute Bücher (z.B.
 
-Diese Übung soll Ihnen die Möglichkeit bieten, sich etwas genauer mit *[R](https://cran.r-project.org/)* und *[RStudio](https://posit.co/products/open-source/rstudio/)* zu beschäftigen. Dies sind skills, die Ihnen im Verlauf des weiteren Studiums sehr helfen werden. Es existieren mittlerweile sehr viele Tutorials im Internet hierzu.
+## Vorbereitung
 
 ::: callout-note
 *R* ist eine kontext-sensitive Sprache, das bedeutet, dass *data* anders interpretiert wird als *Data*. Es kommt also auf die Groß- und Kleinschreibung an.
 :::
 
-## Vorbereitung
-
-In *R* werden die meisten Funktionalitäten durch zusätzliche Pakete (sog. Packages) breitgestellt.
-Die meisten dieser Pakete sind gut Dokomentiert: <https://cran.r-project.org/>
+In *R* werden die meisten Funktionalitäten durch zusätzliche Pakete (sog. Packages) breitgestellt. Die meisten dieser Pakete sind gut Dokumentiert: <https://cran.r-project.org/>
 
 1.  Der Code unten evaluiert zunächst ob das Paket [pacman](https://cran.r-project.org/web/packages/pacman/index.html) auf Ihrem Rechner installiert ist. Wenn dies nicht der Fall ist, dann wird *R* es installieren.
 
 2.  Alternativ könnten Sie dies auch manuell erledigen in dem Sie zunächst ausführen *install.packages("pacman")* und danach fortfahren mit *library(pacman)*.
 
-3.  Die zweite Zeile läd dann das Paket [pacman](https://cran.r-project.org/web/packages/pacman/index.html).
+3.  Die zweite Zeile läd dann das Paket [pacman](https://cran.r-project.org/web/packages/pacman/index.html) s.
 
-4.  Die dritte Zeile nutzt die Funktion *p_load()* aus pacman um alle Pakete zu laden (und vorher zu installieren, falls notwendig), welche wir nachfolgend benutzten werden  (z.B. [pricesensitivitymeter](https://cran.r-project.org/web/packages/pricesensitivitymeter/index.html), welches uns Funktionen bereitstellt für die Durchführung einer PSM-Analyse).
+4.  Die dritte Zeile nutzt die Funktion *p_load()* aus pacman um alle Pakete zu laden (und vorher zu installieren, falls notwendig), welche wir nachfolgend benutzten werden (z.B. [pricesensitivitymeter](https://cran.r-project.org/web/packages/pricesensitivitymeter/index.html) , welches uns Funktionen bereitstellt für die Durchführung einer PSM-Analyse).
 
 ```{r}
 
@@ -67,8 +64,6 @@ pacman::p_load(haven, kableExtra, knitr,
                labelled, tidyverse, pricesensitivitymeter)
 
 ```
-
-
 
 ::: callout-tip
 Um besser verstehen zu können, welche Argumente bzw. Daten eine Funktion braucht, können Sie Ihren Cursor in den Namen der Funktion platzieren und dann *'F1'* drücken.
