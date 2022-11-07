@@ -16,7 +16,8 @@ date-format: full
 citation:
   language: "en"
   type: post
-  url: https://rpubs.com/M_Lichters/DEA
+  url: https://rpubs.com/M_Lichters/PSM
+  title: 'Vorlesung Marketinginstrumente: Kapitel 3 - Price Sensitivity Meter PSM) aka Van Westendorps method in R'
 format:
   html:
     toc: true
@@ -35,6 +36,7 @@ editor: source
 bibliography: references.bib
 editor_options: 
   chunk_output_type: console
+google-scholar: true
 ---
 
 Diese Übung soll die Möglichkeit bieten, sich etwas genauer mit [*R*](https://cran.r-project.org/) und [*RStudio*](https://posit.co/products/open-source/rstudio/) zu beschäftigen. Dies sind Skills im Bereich Datenanalyse, die im Verlauf des weiteren Studiums sehr helfen werden. Es existieren mittlerweile sehr viele Tutorials im Internet hierzu. Daneben existieren gute Bücher (z.B., @chapman2019, @field2012).
