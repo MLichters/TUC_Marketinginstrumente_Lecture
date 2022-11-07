@@ -32,11 +32,14 @@ format:
     footnotes-hover: true
 email-obfuscation: javascript
 editor: source
+bibliography: references.bib
+editor_options: 
+  chunk_output_type: console
 ---
 
-Diese Übung soll Ihnen die Möglichkeit bieten, sich etwas genauer mit [*R*](https://cran.r-project.org/) und [*RStudio*](https://posit.co/products/open-source/rstudio/) zu beschäftigen. Dies sind Skills im Bereich Datenanalyse, die Ihnen im Verlauf des weiteren Studiums sehr helfen werden. Es existieren mittlerweile sehr viele Tutorials im Internet hierzu. Daneben existieren gute Bücher (z.B.
+Diese Übung soll die Möglichkeit bieten, sich etwas genauer mit [*R*](https://cran.r-project.org/) und [*RStudio*](https://posit.co/products/open-source/rstudio/) zu beschäftigen. Dies sind Skills im Bereich Datenanalyse, die im Verlauf des weiteren Studiums sehr helfen werden. Es existieren mittlerweile sehr viele Tutorials im Internet hierzu. Daneben existieren gute Bücher (z.B., @chapman2019, @field2012).
 
-## Vorbereitung
+# Vorbereitung
 
 ::: callout-note
 *R* ist eine kontext-sensitive Sprache, das bedeutet, dass *data* anders interpretiert wird als *Data*. Es kommt also auf die Groß- und Kleinschreibung an.
@@ -44,16 +47,38 @@ Diese Übung soll Ihnen die Möglichkeit bieten, sich etwas genauer mit [*R*](ht
 
 In *R* werden die meisten Funktionalitäten durch zusätzliche Pakete (sog. Packages) breitgestellt. Die meisten dieser Pakete sind gut Dokumentiert: <https://cran.r-project.org/>
 
-1.  Der Code unten evaluiert zunächst ob das Paket [pacman](https://cran.r-project.org/web/packages/pacman/index.html) auf Ihrem Rechner installiert ist. Wenn dies nicht der Fall ist, dann wird *R* es installieren.
+1.  Der Code unten evaluiert zunächst ob das Paket [pacman](https://cran.r-project.org/web/packages/pacman/index.html) [@rinker2022] auf dem Rechner installiert ist. Wenn dies nicht der Fall ist, dann wird *R* es installieren.
 
 2.  Alternativ könnten Sie dies auch manuell erledigen in dem Sie zunächst ausführen *install.packages("pacman")* und danach fortfahren mit *library(pacman)*.
 
 3.  Die zweite Zeile läd dann das Paket [pacman](https://cran.r-project.org/web/packages/pacman/index.html) s.
 
-4.  Die dritte Zeile nutzt die Funktion *p_load()* aus pacman um alle Pakete zu laden (und vorher zu installieren, falls notwendig), welche wir nachfolgend benutzten werden (z.B. [pricesensitivitymeter](https://cran.r-project.org/web/packages/pricesensitivitymeter/index.html) , welches uns Funktionen bereitstellt für die Durchführung einer PSM-Analyse).
+4.  Die dritte Zeile nutzt die Funktion *p_load()* aus pacman um alle Pakete zu laden (und vorher zu installieren, falls notwendig), welche wir nachfolgend benutzten werden (z.B. [pricesensitivitymeter](https://cran.r-project.org/web/packages/pricesensitivitymeter/index.html) [@pricesensitivitymeter], welches uns Funktionen bereitstellt für die Durchführung einer PSM-Analyse).
+
+
 
 ```{r}
+#| include: false
 
+
+#clear workspace
+rm(list = ls())
+
+
+#load packages
+if (!"pacman" %in% rownames(installed.packages())) install.packages("pacman")
+
+library(pacman)
+
+pacman::p_load(haven, kableExtra, knitr, labelled, tidyverse, ggpubr, quarto, downloadthis, pricesensitivitymeter)
+
+
+```
+
+
+
+```{r}
+#| eval: false
 
 
 if (!"pacman" %in% rownames(installed.packages())) install.packages("pacman")
@@ -66,29 +91,84 @@ pacman::p_load(haven, kableExtra, knitr,
 ```
 
 ::: callout-tip
-Um besser verstehen zu können, welche Argumente bzw. Daten eine Funktion braucht, können Sie Ihren Cursor in den Namen der Funktion platzieren und dann *'F1'* drücken.
+Um besser verstehen zu können, welche Argumente eine Funktion erwartet, können wir den Cursor in den Namen der Funktion platzieren und dann *'F1'* drücken.
 :::
 
-Lassen Sie uns die Daten laden. Hierfür nutzen wir den Befehl *read.csv()*.
 
-::: callout-important
-## Daten Download
-
-Um die Daten zu laden, klicken Sie bitte auf den Button "Click to download".
-
-<a href="RawExport.csv" class="button-link"  download>Click to Download</a>
-:::
+Als nächstes Laden wir die Daten aus der Umfrage in der Vorlesung. Hierfür nutzen wir den Befehl *read.csv()* und schreiben den Datensatz in ein neues Objekt mit dem Namen **d**. Damit das funktioniert, müssen wir das *.csv file in unserem RStudio Projektordner abgelegt haben.
 
 ```{r}
 d <- read.csv("RawExport.csv")
-names(d)
+
 ```
 
-Wie Sie nun rechts in der *Environment* sehen können, hat der Datensatz insgesamt 5 Variablen: <br>
+
+::: callout-important
+
+Um die Daten herunterzuladen, klicke bitte auf den Button unten.
+
+:::
+
+
+
+```{r}
+#| echo: false
+# embed dataset
+
+
+d %>%
+  download_this(
+    output_name = "RawExport",
+    output_extension = ".csv",
+    button_label = "Herunterladen als *.csv",
+    button_type = "default",
+    has_icon = TRUE,
+    icon = "fa fa-save"
+  )
+
+
+
+```
+
+
+
+
+
+
+
+Um uns den Datensatz einmal näher anzuschauen, können wir *View(d)* nutzen
+
+```{r}
+#| eval: false
+
+View(d)
+
+
+```
+
+```{r}
+#| echo: false
+
+d %>% kable() 
+
+
+```
+
+Wie wir sehen, gibt es in unserem Beispiel insgesamt 5 Variablen und jede Menge Daten in den Zeilen.
+
+die Namen der Variablen können wir ganz einfach auslesen in dem wir **names(d)** verwenden.
+
+```{r}
+
+names(d)
+
+```
+
+Bei den 5 Variablen handelt es sich um: <br>
 
 <ul>
 
-<li>Die Respondent ID, also eine Identifier Variable.</li>
+<li>**sys_RespNum**: Die Respondent ID, also eine Identifier Variable.</li>
 
 <li>**PSMtoocheap**: Die Variable enthält die Preise, die als **zu günstig** wahrgenommen wurden.</li>
 
@@ -100,46 +180,70 @@ Wie Sie nun rechts in der *Environment* sehen können, hat der Datensatz insgesa
 
 </ul>
 
-## Analyse
+# Analyse
 
-Um die Analyse durchzuführen, laden wir das Package [*pricesensitivitymeter*](https://cran.r-project.org/web/packages/pricesensitivitymeter/index.html){target="_blank"}.
+Um die Analyse durchzuführen, greifen wir auf das Package [*pricesensitivitymeter*](https://cran.r-project.org/web/packages/pricesensitivitymeter/index.html){target="_blank"} zurück. Es lohnt sich fast immer, einmal die Dokumentation auf CRAN (**C**omprehensive **R** **A**rchive **N**etwork) anzusehen. Packages in *R* sind dort in aller Regel gut dokumentiert. Beispielsweise gibt es zu den meisten packages ein Reference manual, in dem die wichtigsten Funktionen eines Pakets anhand von Beispielen erklärt werden.
 
-```{r, warning=FALSE, message=FALSE, results='hide'}
-install.packages("pricesensitivitymeter", repos = "https://cran.r-project.org/")
-library(pricesensitivitymeter)
-```
-
-Wir nutzen hier die Funktion *psm_analysis()*. Diese Funktion braucht in unserem Fall lediglich die 4 Variablen (zu günstig, günstig, teuer, zu teuer). Wir speichern die Ergebnisse in *psm_in_R*.
+Wir nutzen unten die Funktion *psm_analysis()*. Diese Funktion verlangt, in unserem Fall, lediglich nach 4 Variablen als input (zu günstig, günstig, teuer, zu teuer). Wir speichern die Ergebnisse in *psm_in_R*.
 
 ```{r}
-psm_in_R <- psm_analysis(toocheap = d$PSMtoocheap, cheap = d$PSMcheap, expensive = d$PSMexpensive, tooexpensive = d$PSMtooexpensive)
+
+psm_in_R <- psm_analysis(toocheap = d$PSMtoocheap, 
+                         cheap = d$PSMcheap, 
+                         expensive = d$PSMexpensive, 
+                         tooexpensive = d$PSMtooexpensive)
+
 ```
 
 Anschließend geben wir die Resultate mittels der *summary()* Funktion aus.
 
 ```{r}
+
 summary(psm_in_R)
+
+
 ```
 
-## Darstellung
+In der Vorlesung haben wir bereits alle notwendigen Dinge gelernt, um die Ergebnisse interpretieren zu können. Wir sehen, dass die akzeptable Preisspanne für den Online-Masterstudiengang zwischen `r psm_in_R$pricerange_lower` und 
+`r round(psm_in_R$pricerange_upper, digits=2)` € liegt. 
+Der Indifferenzpreis (IDP) liegt bei `r psm_in_R$idp` €. Dies ist der Preis den die [TUC](https://www.tu-chemnitz.de/index.html.en) langfristig für den Master etablieren könnte. An dieser Schwelle halten gleichviele Befragte den Preis für *teuer* und *billig*. Der optimale Preis für die Markteinführung des Masters (OPP) liegt hingegen bei hingegen bei `r psm_in_R$opp` €. Hier empfinden gleichviele Befragte den Preis als *zu teuer* und *zu billig*.
 
-Anschließend wollen wir das ganze nun noch grafisch darstellen. Hierfür nutzen wir das Package [*ggplot2*](https://ggplot2.tidyverse.org/){target="_blank"}.
+# Darstellung
 
-```{r, warning=FALSE, message=FALSE, results='hide'}
-install.packages("ggplot2", repos = "https://cran.r-project.org/")
-library("ggplot2")
-```
-
-Wir nutzen die Funktion *psm_plot()*, um die Daten entsprechend für ein Plot auzubereiten. Anschließend rufen wir den Befehl wieder ab und nutzen *theme_minimal()* von *ggplot2*. Wie gesagt handelt es sich erstmal um die einfachste Darstellung.
+Nun wollen wir uns noch die typische grafische Darstellung für PSM erzeugen. Wir nutzen die Funktion *psm_plot()*.
 
 ```{r}
 default_psm_plot <- psm_plot(psm_in_R)
 
-default_psm_plot + theme_minimal()
+default_psm_plot
 ```
 
-Nun können wir zumindest noch die Axen sowie den Titel anpassen.
+Abschließend können wir zumindest noch die Axen sowie den Titel anpassen.
 
 ```{r}
-default_psm_plot + theme_minimal() + ylab("Prozente") + xlab("Preis") + ggtitle("PSM in R") + theme(plot.title = element_text(hjust = 0.5))
+
+default_psm_plot + 
+  theme_minimal() + 
+  ylab("Prozente") + 
+  xlab("Preis") + 
+  ggtitle("PSM in R") + 
+  theme(plot.title = element_text(hjust = 0.5)
+        )
+
 ```
+
+# RStudio Cloud als Alternative
+
+Falls Sie noch neu im *R* universe sein sollten (gerüchteweise gibt es noch solche Leute), ist es eine Alternative den Code dieses Skripts auch in [RStudio Cloud/ Posit Cloud](https://rstudio.cloud/) auszuführen. Diese Lösung ermöglicht es Daten in RStudio zu analysieren, wobei die gesamte Analyse im Web Browser läuft. Das hat natürlich einige Vorteile:
+
+-   Für Studierende ist der Service gebührenfrei (just sign up)
+-   No need to install *R* & *RStudio*
+-   No need to update *R* and packages
+-   Alle notwendigen Pakete sind bereits im korrespondierenden *RStudio Cloud* project [https://rstudio.cloud/content/4905739](https://rstudio.cloud/content/4905739) vorgeladen.
+
+:::{.callout-note}
+
+Stellen Sie sicher, dass eine Kopie des Projekts in Ihrem Account erstellen. Anderenfalls werden Ergebnisse nichts gespeichert.
+:::
+
+
